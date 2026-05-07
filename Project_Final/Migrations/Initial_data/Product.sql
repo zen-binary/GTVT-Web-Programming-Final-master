@@ -1,0 +1,1 @@
+﻿INSERT INTO utc_shop.dbo.Products (CategoryId, Name, Quantity, Price, Size, Color, Status, CreatedBy, CreatedAt, LastModifiedBy, LastModifiedAt) VALUES (1, N'Áo sơ mi', 1, 1111, N'39', N'Vàng', N'ACTIVE', N'system', N'2024-09-13 18:57:39.2733333', N'system', N'2024-09-13 18:57:39.2733333');

@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Cards";
+}
+
+@model List<string>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+                <h5>Đơn hàng</h5>
+                <div>
+                    @if (Model.Count > 0)
+                    {
+                        <button class="btn btn-danger ms-2" onclick="onDelete()">Xóa đơn</button>
+
+                    }
+                    <button class="btn btn-primary ms-2" onclick="onCreate()">Tạo đơn</button>
+                </div>
+            </div>
+            <div class="card-body pe-4 ps-2 pt-0 pb-2 mt-3">
+            @if (Model.Count == 0)
+            {
+
+            }
+            else
+            {
+                <div>
+                    <ul class="nav nav-tabs" id="cardTabs">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" id="card-@Model[i]" href="#" onclick="onSelectCard('@Model[i]')">Đơn @(i + 1)</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="d-flex gap-3 mt-3 px-3">
+                    <div class="col-6">
+                        <h6>Sản phẩm</h6>
+
+                        <div class="table-responsive p-0" style="max-height: 400px;">
+                            <table class="table align-items-center mb-0" id="tbl-products">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-6" id="card-info">
+                        <h6>Thông tin đơn hàng</h6>
+                        <input type="text" hidden id="id">
+                        <input type="text" hidden id="createdAt">
+
+                        <div class="d-flex gap-3 w-100 mb-2">
+                            <div class="w-100 mb-3 mb-lg-0">
+                                <label for="receiverName" class="form-label">Tên KH</label>
+                                <input type="text" class="form-control" id="receiverName">
+                            </div>
+
+                            <div class="w-100 mb-3 mb-lg-0">
+                                <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                                <input type="text" class="form-control" id="phoneNumber">
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="receiverAddress" class="form-label">Địa chỉ</label>
+                            <textarea type="text" class="form-control" id="receiverAddress" rows="2"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end mb-2">
+                            <button class="btn btn-primary ms-2" onclick="onUpdate()">Cập nhật</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6>Sản phẩm có trong đơn hàng</h6>
+
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0" id="tbl-products-in-card">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Tên</th>
+                                            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Số lượng</th>
+                                            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Giá</th>
+                                            <th class=""></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mb-3">
+                            <button class="btn btn-primary ms-2" onclick="onPayment()">Thanh toán</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="firstModelValue" value="@Model[0]" />
+            }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="module">
+    import { selectedCard, 
+        createCard, 
+        updateData, 
+        getProduct, 
+        addToCard, 
+        deleteProductInCard, 
+        editQuantity, 
+        deleteCard, 
+        createBill, 
+    } from '/js/services/card.js'
+
+
+    window.onCreate = () => {
+        createCard();
+    }
+
+    window.onSelectCard = (id) => {
+        setTimeout(() => {
+            selectedCard(id);
+        }, 500)
+    }
+
+    window.onUpdate = () => {
+        updateData();
+    }
+
+    window.onAddToCard = (element) => {
+        addToCard(element);
+    }
+
+    window.onDeleteProd = (id) => {
+        deleteProductInCard(id);
+    }
+
+    window.onEditQuantity = (productId, element) => {
+        editQuantity(productId, Number(element.value))
+    }
+
+    window.onDelete = () => {
+        deleteCard();
+    }
+
+    window.onPayment = () => {
+        createBill();
+    }
+
+    // Initial
+    getProduct();
+    var idFirst = $('#firstModelValue').val();
+    if (idFirst) {
+        setTimeout(() => {
+            selectedCard(idFirst);
+        }, 1000)
+    }
+</script>

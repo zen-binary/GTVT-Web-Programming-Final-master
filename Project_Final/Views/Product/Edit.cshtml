@@ -1,0 +1,106 @@
+﻿@using Project_Final.Models.Entity;
+@{
+    ViewData["Title"] = "Edit Product";
+}
+@model Product
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+                <h5>Chỉnh sửa sản phẩm</h5>
+                <button class="btn btn-primary ms-2" onclick="onUpdate()">Lưu</button>
+            </div>
+            <div class="card-body p-3" style="max-height:70vh; overflow-x:auto" id="form-edit">
+                <input type="type" id="id" asp-for="Id" hidden />
+                <input type="type" id="statusTemp" asp-for="Status" hidden />
+
+                <div class="mb-3 form-group w-100">
+                    <label for="name" class="form-label">Tên sản phẩm</label>
+                    <input type="text" class="form-control" id="name" asp-for="Name" disabled>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-2">
+                    <div class="mb-3 form-group w-100">
+                        <label for="categoryId" class="form-label">Danh mục sản phẩm</label>
+                        <select id="categoryId" class="form-control mr-sm-2"
+                                asp-items="@ViewBag.CategoryID" asp-for="CategoryId"></select>
+                        <div class="invalid-feedback error-categoryId"></div>
+                    </div>
+
+                    <div class="mb-3 form-group w-100">
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="status"></select>
+                        <div class="invalid-feedback error-status"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <div class="mb-3 d-lg-flex gap-lg-3 form-group w-100">
+                        <div class="d-sm-flex gap-sm-3 w-100">
+                            <div class="w-100 mb-3 mb-lg-0">
+                                <label for="size" class="form-label">Size</label>
+                                <input type="text" class="form-control" id="size" asp-for="Size" disabled>
+                            </div>
+
+                            <div class="w-100 mb-3 mb-lg-0">
+                                <label for="color" class="form-label">Màu</label>
+                                <input type="text" class="form-control" id="color" asp-for="Color" disabled>
+                            </div>
+                        </div>
+
+                        <div class="d-sm-flex gap-sm-3 w-100">
+                            <div class="w-100 mb-3 mb-lg-0">
+                                <label for="quantity" class="form-label">Số lượng</label>
+                                <input type="number" min="0" asp-for="Quantity" class="form-control" id="quantity" placeholder="Mời bạn nhập">
+                            </div>
+
+                            <div class="w-100 mb-3 mb-lg-0">
+                                <label for="price" class="form-label">Giá</label>
+                                <input type="number" min="0" asp-for="Price" class="form-control" id="price" placeholder="Mời bạn nhập">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <div class="mb-3 d-lg-flex gap-lg-3 form-group w-100">
+                        <div class="d-sm-flex gap-sm-3 w-100">
+                             <div class="mb-3 w-100">
+                                <label for="createdBy" class="form-label">Người tạo</label>
+                                <input type="text" class="form-control" id="createdBy" asp-for="CreatedBy" disabled>
+                            </div>
+                            <div class="mb-3 w-100">
+                                <label for="createdAt" class="form-label">Thời gian tạo</label>
+                                <input type="text" class="form-control" id="createdAt" value="@Model.CreatedAt.ToString("HH:mm:ss dd/MM/yyyy")" disabled>
+                            </div>
+                         </div>
+
+                        <div class="d-sm-flex gap-sm-3 w-100">
+                            <div class="mb-3 w-100">
+                                <label for="lastModifiedBy" class="form-label">Người sửa cuối</label>
+                                <input type="text" class="form-control" id="lastModifiedBy" asp-for="LastModifiedBy" disabled>
+                            </div>
+                            <div class="mb-3 w-100">
+                                <label for="lastModifiedAt" class="form-label">Thời gian sửa cuối</label>
+                                <input type="text" class="form-control" id="lastModifiedAt" value="@Model.LastModifiedAt.ToString("HH:mm:ss dd/MM/yyyy")" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { customizeSelectStatus } from '/js/site.js'
+    import { updateData } from '/js/services/product.js'
+
+    window.onUpdate = () => {
+        updateData();
+    }
+
+    customizeSelectStatus('#form-edit #status')
+    $("#form-edit #status").val($('#form-edit #statusTemp').val());
+
+</script>

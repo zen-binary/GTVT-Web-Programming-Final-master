@@ -1,0 +1,52 @@
+
+remove-migration
+add-migration //version
+update-database
+
+
+
+
+﻿EF CODE FIRST
+1. CÀI ĐẶT:
+	+ Install-Package Microsoft.EntityFrameworkCore
+	+ Install-Package Microsoft.EntityFrameworkCore.SqlServer
+	+ Install-Package Microsoft.EntityFrameworkCore.Tools
+2. Tạo lớp các đối tượng Model cần có trong dự án trong thư mục Models:
+	+ Các lớp đối tượng này chính là các bảng sẽ được tạo trong CSDl
+	+ Xem lại cách cấu hình trong model ở project
+3. Tạo 1 lớp DBContext trong thư mục DBContext:
+	+ Xem cấu hình ở bên trong file DBContextDungna
+4. Tiến hành tạo Database thông qua câu lệnh trong PM
+	+ add-migration <Tên phiên bản>
+	+ update-database thực thi tiến hành zen vào DB
+Lứu ý:
+	+ Toàn bộ các project không được phép có lỗi đỏ
+	+ Copy đường dẫn nhanh ko copy từ đường dẫn bên ngoài.
+	+ Đặt tên DB mới tùy ý
+
+MONG RẰNG CÁC BẠN SẼ CHỊU KHÓ HỌC FLUENT API SỚM.
+Thư mục:
+1. Repositories: Sẽ chứa các Repo của các bảng  và mỗi bảng sẽ có 1 Repo tương ứng. Bên trong nó sẽ là các Phương thức CRUD. Nó là thằng duy nhất được phép làm việc với CSDL
+2. Context
+3. DomainClass
+
+
+
+
+﻿EF Database FIRST
+1. Cần phải có tạo CSDL trước và có bảng ở bên trong.
+2. Cài đặt Package EF CORE:
+	+ Install-Package Microsoft.EntityFrameworkCore
+	+ Install-Package Microsoft.EntityFrameworkCore.SqlServer
+	+ Install-Package Microsoft.EntityFrameworkCore.Tools
+3. Tools => NuGet => Package Manager Console (Nơi để gõ lệnh) - Trước khi gõ thì chọn Default Project là project cần chạy
+	+ Câu lệnh sau: Scaffold-DbContext 'MỜI ANH CHỊ COPY ĐƯỜNG DẪN VÀO ĐÂY' Microsoft.EntityFrameworkCore.SqlServer -OutputDir DomainClass -context FpolyDBContext -Contextdir Context -DataAnnotations -Force
+	+ Ví dụ: Scaffold-DbContext 'Data Source=DUNGNAPC\SQLEXPRESS;Initial Catalog=FINALASS_FPOLYSHOP_SM22_BL2_DUNGNA29;Persist Security Info=True;User ID=dungna34;Password=123456' Microsoft.EntityFrameworkCore.SqlServer -OutputDir DomainClass -context FpolyDBContext -Contextdir Context -DataAnnotations -Force
+	
+	
+	
+======Install-Package dependencies cmd========
+Install-Package AutoMapper
+Install-Package Microsoft.Extensions.Caching.StackExchangeRedis
+Install-Package StackExchange.Redis
+Install-Package Microsoft.AspNetCore.Authentication.JwtBearer

@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "Create Product";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+                <h5>Tạo mới sản phẩm</h5>
+                <button class="btn btn-primary ms-2" id="submit-form">Lưu</button>
+            </div>
+            <div class="card-body p-3" style="max-height:70vh; overflow-x:auto" id="form-create">
+                <div class="d-flex flex-column flex-lg-row gap-2">
+                    <div class="mb-3 form-group w-100">
+                        <label for="name" class="form-label">Tên sản phẩm</label>
+                        <input type="text" class="form-control" id="name" placeholder="Mời bạn nhập">
+                        <div class="invalid-feedback" id="error-name"></div>
+                    </div>
+
+                    <div class="mb-3 form-group w-100">
+                        <label for="categoryId" class="form-label">Danh mục sản phẩm</label>
+                        <select id="categoryId" class="form-control mr-sm-2"
+                                asp-items="@ViewBag.CategoryID"></select>
+                        <div class="invalid-feedback" id="error-categoryId"></div>
+                    </div>
+                </div>
+
+                <div id="form-container">
+                    <!-- Default Form -->
+                    <div class="d-flex gap-2" data-index="1">
+                        <div class="mb-3 d-lg-flex gap-lg-3 form-group w-90">
+                            <div class="d-sm-flex gap-sm-3 w-100">
+                                <div class="w-100 mb-3 mb-lg-0">
+                                    <label for="quantity-1" class="form-label">Số lượng</label>
+                                    <input type="number" min="0" value="0" class="form-control" id="quantity-1" placeholder="Mời bạn nhập">
+                                    <div class="invalid-feedback" id="error-quantity-1"></div>
+                                </div>
+
+                                <div class="w-100 mb-3 mb-lg-0">
+                                    <label for="price-1" class="form-label">Giá</label>
+                                    <input type="number" min="0" value="0" class="form-control" id="price-1" placeholder="Mời bạn nhập">
+                                    <div class="invalid-feedback" id="error-price-1"></div>
+                                </div>
+                            </div>
+
+                            <div class="d-sm-flex gap-sm-3 w-100">
+                                <div class="w-100 mb-3 mb-lg-0">
+                                    <label for="size-1" class="form-label">Size</label>
+                                    <input type="text" class="form-control" id="size-1" placeholder="Mời bạn nhập">
+                                    <div class="invalid-feedback" id="error-size-1"></div>
+                                </div>
+
+                                <div class="w-100 mb-3 mb-lg-0">
+                                    <label for="color-1" class="form-label">Màu</label>
+                                    <input type="text" class="form-control" id="color-1" placeholder="Mời bạn nhập">
+                                    <div class="invalid-feedback" id="error-color-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 w-15">
+                        </div>
+                    </div>
+
+                    <!-- Template form -->
+                    <template id="form-template">
+                        <div class="d-flex gap-2" data-index="{index}">
+                            <div class="mb-3 d-lg-flex gap-lg-3 form-group w-90">
+                                <div class="d-sm-flex gap-sm-3 w-100">
+                                    <div class="w-100 mb-3 mb-lg-0">
+                                        <label for="quantity-{index}" class="form-label">Số lượng</label>
+                                        <input type="number" min="0" value="0" class="form-control" id="quantity-{index}" placeholder="Mời bạn nhập">
+                                        <div class="invalid-feedback" id="error-quantity-{index}"></div>
+                                    </div>
+
+                                    <div class="w-100 mb-3 mb-lg-0">
+                                        <label for="price-{index}" class="form-label">Giá</label>
+                                        <input type="number" min="0" value="0" class="form-control" id="price-{index}" placeholder="Mời bạn nhập">
+                                        <div class="invalid-feedback" id="error-price-{index}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="d-sm-flex gap-sm-3 w-100">
+                                    <div class="w-100 mb-3 mb-lg-0">
+                                        <label for="size-{index}" class="form-label">Size</label>
+                                        <input type="text" class="form-control" id="size-{index}" placeholder="Mời bạn nhập">
+                                        <div class="invalid-feedback" id="error-size-{index}"></div>
+                                    </div>
+
+                                    <div class="w-100 mb-3 mb-lg-0">
+                                        <label for="color-{index}" class="form-label">Màu</label>
+                                        <input type="text" class="form-control" id="color-{index}" placeholder="Mời bạn nhập">
+                                        <div class="invalid-feedback" id="error-color-{index}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 w-15">
+                                <button class="btn btn-danger btn-sm remove-form w-100">Xóa</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="pe-3 d-flex justify-content-end">
+                    <button id="add-form" class="btn btn-success"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { insertData } from '/js/services/product.js'
+    let count = 1;
+    $(document).ready(function () {
+        // Function to add a new form
+        $('#add-form').click(function () {
+            count++;
+            const template = $('#form-template').contents().clone();
+            template.find('[id]').each(function () {
+                const id = $(this).attr('id');
+                $(this).attr('id', id.replace(/{index}/g, count));
+            });
+            template.find('[for]').each(function () {
+                const forAttr = $(this).attr('for');
+                $(this).attr('for', forAttr.replace(/{index}/g, count));
+            });
+            template.attr('data-index', count);
+            $('#form-container').append(template);
+        });
+
+        // Function to handle the removal of forms
+        $('#form-container').on('click', '.remove-form', function () {
+            const form = $(this).closest('[data-index]');
+
+            // Ensure at least one form remains
+            if ($('#form-container [data-index]').length > 1) {
+                form.remove();
+        
+                // Update indices of remaining forms
+                $('#form-container [data-index]').each(function (i) {
+                    const newIndex = i + 1;
+
+                    // Update the data-index attribute
+                    $(this).attr('data-index', newIndex);
+
+                    // Update 'id' attributes
+                    $(this).find('[id]').each(function () {
+                        const id = $(this).attr('id');
+                        $(this).attr('id', id.replace(/\d+/, newIndex));
+                    });
+
+                    // Update 'for' attributes (for labels)
+                    $(this).find('[for]').each(function () {
+                        let forAttr = $(this).attr('for');
+                        forAttr = forAttr.replace(/\d+/, newIndex);
+                        $(this).attr('for', forAttr);
+                    });
+                });
+            }
+        });
+
+        // Function to handle form submission
+        $('#submit-form').click(function () {
+            const formData = {
+                name: $('#name').val(),
+                categoryId: $('#categoryId').val(),
+                details: []
+            };
+
+            $('#form-container [data-index]').each(function () {
+                const index = $(this).data('index');
+                const data = {
+                    quantity: $(this).find(`#quantity-${index}`).val(),
+                    price: $(this).find(`#price-${index}`).val(),
+                    size: $(this).find(`#size-${index}`).val(),
+                    color: $(this).find(`#color-${index}`).val()
+                };
+                formData.details.push(data);
+            });
+
+            insertData(formData);
+        });
+    });
+</script>

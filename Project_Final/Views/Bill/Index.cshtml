@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Bill";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+                <h5>Hóa đơn</h5>
+
+            </div>
+            <div class="card-body pe-4 ps-2 pt-0 pb-2 mt-3">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0 table-lg mb-3" id="tbl-bills">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Id</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Khách hàng</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">SĐT</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Địa chỉ</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Tổng tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mb-3" id="bill-pagination">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('top')">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('pre')">
+                                    <span aria-hidden="true">&lt;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('next')">
+                                    <span aria-hidden="true">&gt;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('end')">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { getData, handlePageBill } from "/js/services/bill.js";
+    import { PAGE_URL } from '/js/utils/constants.js';
+    import { buildParamSearchUrl } from '/js/site.js';
+
+    getData();
+
+    window.getDetails = (id) => {
+        window.location.href = PAGE_URL.BILL.DETAIL + '/' + id;
+    }
+
+    window.handlePage = (type) => {
+        handlePageBill(type)
+    }
+</script>

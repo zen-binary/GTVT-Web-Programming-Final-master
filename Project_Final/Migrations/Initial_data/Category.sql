@@ -1,0 +1,4 @@
+﻿INSERT INTO Categories (Id, Name, CreatedBy, CreatedAt, LastModifiedBy, LastModifiedAt, Status) VALUES (1, N'Quần Âu', N'system', N'2024-09-18 20:17:58.5500000', N'system', N'2024-09-18 20:17:58.5500000', N'ACTIVE');
+INSERT INTO Categories (Id, Name, CreatedBy, CreatedAt, LastModifiedBy, LastModifiedAt, Status) VALUES (2, N'T-Shirt', N'system', N'2024-09-18 20:17:58.5600000', N'system', N'2024-09-18 20:17:58.5600000', N'ACTIVE');
+INSERT INTO Categories (Id, Name, CreatedBy, CreatedAt, LastModifiedBy, LastModifiedAt, Status) VALUES (3, N'Quần Jean', N'system', N'2024-09-18 20:17:58.5700000', N'system', N'2024-09-18 20:17:58.5700000', N'ACTIVE');
+INSERT INTO Categories (Id, Name, CreatedBy, CreatedAt, LastModifiedBy, LastModifiedAt, Status) VALUES (4, N'Áo dài tay', N'system', N'2024-09-18 20:23:21.4266667', N'system', N'2024-09-18 20:23:21.4266667', N'ACTIVE');

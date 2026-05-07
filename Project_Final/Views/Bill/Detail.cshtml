@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Bill-Detail";
+}
+@model long;
+<input type="text" id="billId" value="@Model" hidden/>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+                <h5>Hóa đơn chi tiết</h5>
+
+            </div>
+            <div class="card-body pe-4 ps-2 pt-0 pb-2 mt-3">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0 table-lg" id="tbl-bill-details">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Tên sản phẩm</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Số lượng</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Đơn giá</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="module">
+    import { getDetails } from '/js/services/bill.js';
+
+    const billId = $('#billId').val();
+    getDetails(billId);
+</script>

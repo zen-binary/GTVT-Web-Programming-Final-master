@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Product";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5>Danh sách sản phẩm</h5>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="pe-3 d-flex justify-content-end">
+                    <a asp-route="CreateProduct" class="btn btn-primary">Thêm mới</a>
+                </div>
+
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="tbl-products">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Tên</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Danh mục</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Số lượng</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Giá</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Trạng thái</th>
+                                <th class=""></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mb-3" id="product-pagination">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('top')">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('pre')">
+                                    <span aria-hidden="true">&lt;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('next')">
+                                    <span aria-hidden="true">&gt;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('end')">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { getData, editData, deleteData, handlePageProduct } from '/js/services/product.js'
+
+
+    $(document).ready(function () {
+        getData();
+    });
+
+    window.onEdit = (id) => {
+        editData(id);
+    }
+
+    window.onDelete = (id) => {
+        deleteData(id);
+    }
+
+    window.handlePage = (type) => {
+        handlePageProduct(type)
+    }
+</script>

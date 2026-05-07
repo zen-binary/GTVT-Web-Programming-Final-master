@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = "Category";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5>Danh sách Danh mục</h5>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="pe-3 d-flex justify-content-end">
+                    <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formCreate" aria-expanded="false" aria-controls="formCreate">Form thêm mới</button>
+                </div>
+                <div class="collapse px-3" id="formCreate">
+                    <div class="card card-body">
+                        <div class="mb-3" id="categoryName">
+                            <label for="name" class="form-label">Tên danh mục</label>
+                            <input type="text" class="form-control" id="name" placeholder="Mời bạn nhập và bấm Enter">
+                            <div class="invalid-feedback" id="errorName"></div>
+                        </div>
+
+                        <div id="button-container" class="d-flex flex-wrap gap-4 mt-2 mb-3">
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary btn-save" id="btn-save" onclick="onSave()">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0 table-lg" id="tbl-categories">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Tên</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Trạng thái</th>
+                                <th class=""></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mb-3" id="cate-pagination">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('top')">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('pre')">
+                                    <span aria-hidden="true">&lt;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('next')">
+                                    <span aria-hidden="true">&gt;</span>
+                                </button>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" href="#" onclick="handlePage('end')">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal edit category -->
+<div class="modal fade" id="modalEditCate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Chỉnh sửa Danh mục</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body body-data">
+                <input type="text" id="id" hidden>
+                <div class="d-flex gap-3">
+                    <div class="mb-3 w-100">
+                        <label for="name" class="form-label">Tên danh mục</label>
+                        <input type="text" class="form-control" id="name" placeholder="Mời bạn nhập">
+                        <div class="invalid-feedback error-name"></div>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="status"></select>
+                        <div class="invalid-feedback error-status"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                     <div class="mb-3 w-100">
+                        <label for="createdBy" class="form-label">Người tạo</label>
+                        <input type="text" class="form-control" id="createdBy" disabled>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="createdAt" class="form-label">Thời gian tạo</label>
+                        <input type="text" class="form-control" id="createdAt" disabled>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <div class="mb-3 w-100">
+                        <label for="lastModifiedBy" class="form-label">Người sửa cuối</label>
+                        <input type="text" class="form-control" id="lastModifiedBy" disabled>
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="lastModifiedAt" class="form-label">Thời gian sửa cuối</label>
+                        <input type="text" class="form-control" id="lastModifiedAt" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="onUpdate()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { 
+        getData, 
+        insertData, 
+        editData, 
+        updateData, 
+        deleteData, 
+        handlePageCate, 
+        getArrNameCreate, 
+        setArrNameCreate, 
+        pushArrNameCreate, 
+        spliceArrNameCreate 
+    } from '/js/services/category.js'
+
+    $(document).ready(function () {
+        getData();
+
+        $('#name').on('keydown', function (event) {
+            if (event.key === 'Enter') {
+                onSubmitName(event);
+            }
+        });
+    });
+
+    function onSubmitName(event) {
+        if (event?.key === 'Enter') {
+            event.preventDefault();
+            const val = $('#categoryName input').val()?.trim();
+
+            if (!getArrNameCreate().includes(val)) {
+                pushArrNameCreate(val);
+            }
+
+            generateNames();
+
+            // Optional: Clear the input field after adding
+            $('#categoryName input').val('');
+        }
+    }
+
+    window.onRemoveName = (index) => {
+        spliceArrNameCreate(index, 1);
+        generateNames();
+    }
+
+    window.onSave = () => {
+        insertData();
+    }
+
+    window.onEdit = (id) => {
+        editData(id);
+    }
+
+    window.onUpdate = () => {
+        let data = {
+            id: $('#modalEditCate .body-data #id').val(),
+            name: $('#modalEditCate .body-data #name').val(),
+            status: $('#modalEditCate .body-data #status').val()
+        }
+
+        updateData(data);
+    }
+
+    window.onDelete = (id) => {
+        deleteData(id);
+    }
+
+    window.handlePage = (type) => {
+        handlePageCate(type)
+    }
+
+    function generateNames() {
+        $('#button-container').empty(); // Clear existing values
+        getArrNameCreate().forEach((name, index) => {
+            const button = `
+                            <button type="button" class="btn btn-primary position-relative item-name">
+                                ${name}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" onclick=onRemoveName(${index})>
+                                    x
+                                </span>
+                            </button>
+                            `;
+            $('#button-container').append(button);
+        });
+    }
+
+</script>
+
+<style>
+    .item-name,
+    .btn-save {
+        margin-bottom: 0;
+    }
+</style>
