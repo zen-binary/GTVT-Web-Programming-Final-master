@@ -26,7 +26,7 @@ public partial class DBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost,21433;Initial Catalog=utc_shop;Persist Security Info=True;User ID=sa;Password=Passw0rd;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=localhost,1433;Initial Catalog=utc_shop;Persist Security Info=True;User ID=sa;Password=123456;TrustServerCertificate=True");
 
     public override int SaveChanges()
     {
@@ -156,8 +156,11 @@ public partial class DBContext : DbContext
             .Property(u => u.Roles)
             .HasConversion(
             v => JsonSerializer.Serialize(v, new JsonSerializerOptions { WriteIndented = true }),
-            v => JsonSerializer.Deserialize<List<string>>(v, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-            );
+            v => JsonSerializer.Deserialize<List<string>>(v, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<string>())
+            .Metadata.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<List<string>>(
+                (c1, c2) => c1!.SequenceEqual(c2!),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()));
 
         // CreatedAt
         modelBuilder.Entity<User>()

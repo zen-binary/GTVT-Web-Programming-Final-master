@@ -156,14 +156,11 @@
             event.preventDefault();
             const val = $('#categoryName input').val()?.trim();
 
-            if (!getArrNameCreate().includes(val)) {
+            if (val && !getArrNameCreate().includes(val)) {
                 pushArrNameCreate(val);
+                generateNames();
+                $('#categoryName input').val('');
             }
-
-            generateNames();
-
-            // Optional: Clear the input field after adding
-            $('#categoryName input').val('');
         }
     }
 

@@ -25,11 +25,17 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISellService, SellService>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddStackExchangeRedisCache(options =>
+if (builder.Configuration.GetValue<bool>("Redis:Enabled"))
 {
-    options.Configuration = "localhost:6379"; // Địa chỉ Redis server
-    //options.InstanceName = "SampleInstance";  // Tên instance Redis (tuỳ chọn)
-});
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = builder.Configuration["Redis:ConnectionString"] ?? "localhost:6379";
+    });
+}
+else
+{
+    builder.Services.AddDistributedMemoryCache();
+}
 
 //security config
 builder.Services.AddAuthentication(options =>
@@ -75,6 +81,13 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DBContext>();
+    db.Database.Migrate();
+}
+
 HttpContextHelper.Configure(app.Services);
 
 // Sử dụng CORS

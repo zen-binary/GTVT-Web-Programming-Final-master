@@ -12,11 +12,27 @@ const pageCate = {
 
 var arrNameCreate = [];
 
+function collectPendingCategoryNames() {
+    const val = $('#categoryName input').val()?.trim();
+    if (val && !arrNameCreate.includes(val)) {
+        arrNameCreate.push(val);
+        $('#categoryName input').val('');
+    }
+    return arrNameCreate.length > 0;
+}
+
 export function insertData() {
+    collectPendingCategoryNames();
+    if (arrNameCreate.length === 0) {
+        toastMessage("error", "Vui lòng nhập ít nhất một tên danh mục");
+        $('#categoryName input').addClass('is-invalid');
+        $('#categoryName #errorName').text('Không được phép để trống');
+        return;
+    }
     onLoadingPage(true);
     $('#categoryName input').removeClass('is-invalid');
     setTimeout(() => {
-        callApi(`${PREFIX_API}`, "POST", arrNameCreate,
+        callApi(`${PREFIX_API}`, "POST", { names: arrNameCreate },
             function (resp) {
                 if (resp?.meta?.code === SERVICE_CODE_SUCCESS) {
                     toastMessage("success", MESSAGE.SUCCESS.CREATE)
@@ -55,7 +71,10 @@ export function setArrNameCreate(data) {
 }
 
 export function pushArrNameCreate(data) {
-    arrNameCreate.push(data);
+    const name = data?.trim();
+    if (name) {
+        arrNameCreate.push(name);
+    }
 }
 
 export function spliceArrNameCreate(start, end) {

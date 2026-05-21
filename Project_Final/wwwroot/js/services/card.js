@@ -105,13 +105,22 @@ export function updateData(msg = null) {
 }
 
 export function getProduct() {
+    if ($('#tbl-products').length === 0) {
+        return;
+    }
     onLoadingPage(true);
     setTimeout(() => {
         callApi(`${PREFIX_API_PRODUCT}`, "GET", 'status=ACTIVE',
             function (resp) {
                 if (resp?.meta?.code === SERVICE_CODE_SUCCESS) {
                     var tableBody = $('#tbl-products tbody');
-                    tableBody.empty(); // Xóa dữ liệu cũ trước khi thêm dữ liệu mới
+                    tableBody.empty();
+
+                    if (!resp.data || resp.data.length === 0) {
+                        $('#products-empty-hint').show();
+                        return;
+                    }
+                    $('#products-empty-hint').hide();
 
                     resp.data.forEach(function (product) {
                         var row = $('<tr></tr>');
@@ -129,10 +138,11 @@ export function getProduct() {
                         row.append(nameCell);
 
                         var actionCell = $('<td class="align-middle text-center text-lg"></td>');
+                        const productJson = JSON.stringify(product).replace(/'/g, '&apos;');
                         actionCell.html(`
-                            <i class="fas fa-shopping-cart text-sm ms-auto text-success cursor-pointer" 
-                               data-bs-toggle="tooltip" data-bs-placement="top" title="Add to Cart"
-                               data-product='${JSON.stringify(product).replace(/'/g, "&apos;")}' 
+                            <i class="ni ni-cart card-cart-icon"
+                               data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào đơn"
+                               data-product='${productJson}'
                                onclick="onAddToCard(this)"></i>
                         `);
                         row.append(actionCell);
@@ -155,6 +165,10 @@ export function getProduct() {
 }
 
 export function addToCard(productStr) {
+    if (!idSelected) {
+        toastMessage("error", "Vui lòng chọn tab đơn hàng (Đơn 1, Đơn 2...) trước khi thêm sản phẩm");
+        return;
+    }
     var product = JSON.parse($(productStr).attr('data-product'));
     const containsId = cardOrderDetails.some(card => card.productId === product.id);
 

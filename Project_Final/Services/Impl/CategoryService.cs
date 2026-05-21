@@ -31,20 +31,21 @@ namespace Project_Final.Services.Impl
                             new FieldValidation("name", "Không được phép để trống")]));
             foreach (var categoryName in categoryNames)
             {
-                if (categoryName.IsNullOrEmpty())
+                var name = categoryName?.Trim();
+                if (name.IsNullOrEmpty())
                     return Response<List<Category>>.OfFailedFieldValidations(
                         new FieldValidationException([
                             new FieldValidation("name", "Không được phép để trống")]));
-                var isExistCate = dbContext.Categories.Any(c => categoryName.ToLower() == c.Name.ToLower());
+                var isExistCate = dbContext.Categories.Any(c => name.ToLower() == c.Name.ToLower());
                 if (isExistCate)
                 {
                     return Response<List<Category>>.OfFailedFieldValidations(
                         new FieldValidationException([
-                            new FieldValidation("name", categoryName + " đã tồn tại")]));
+                            new FieldValidation("name", name + " đã tồn tại")]));
                 }
                 else
                 {
-                    var category = new Category { Name = categoryName, Status = Status.ACTIVE };
+                    var category = new Category { Name = name, Status = Status.ACTIVE };
                     dbContext.Categories.Add(category);
                     categories.Add(category);
                 }
@@ -75,7 +76,7 @@ namespace Project_Final.Services.Impl
                 .ToList();
             if (categories == null || categories.Count == 0)
             {
-                return Response<List<Category>>.OfFailed(new BussinessException(ErrorCode.NOT_FOUND_DATA, "Không tìm thấy Danh mục"));
+                return Response<List<Category>>.OfSuccessed(new List<Category>(), page, size, totalElemant);
             }
             return Response<List<Category>>.OfSuccessed(categories, page, size, totalElemant);
         }

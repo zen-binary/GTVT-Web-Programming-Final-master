@@ -1,3 +1,16 @@
+.card-cart-icon {
+    font-size: 1.35rem;
+    color: #2dce89;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.card-cart-icon:hover {
+    color: #26ab73;
+    transform: scale(1.15);
+}
+
 .loader-mark {
     position: fixed;
     bottom: 0;

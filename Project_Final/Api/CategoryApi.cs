@@ -20,9 +20,9 @@ namespace Project_Final.Api
         }
 
         [HttpPost]
-        public Response<List<Category>> Create(List<string> categories)
+        public Response<List<Category>> Create([FromBody] CreateCategoriesRequest request)
         {
-            return categoryService.create(categories);
+            return categoryService.create(request?.Names);
         }
 
         [HttpPut("{id}")]
